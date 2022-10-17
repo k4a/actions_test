@@ -19,8 +19,9 @@ jobs:
     - name: DIR
       run:  dir *.*   
     
-    - name: Archive artifacts
-      run:  Compress-Archive -Path *.txt -DestinationPath artifact.zip
+    - name:  Archive artifacts
+      shell: pwsh
+      run:   Compress-Archive -Path *.* -DestinationPath artifact.zip
       
     - name: DIR2
       run:  dir *.*   
