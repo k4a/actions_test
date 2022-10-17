@@ -16,8 +16,7 @@ jobs:
       with:
          repository: daylight-liontex/WholeSale
          token: ${{ secrets.my_pat }}
-         fetch-depth: 0
-         submodules:  recursive
+    - run: git clone
          
     - name: download latest PBL
       shell: pwsh
