@@ -12,10 +12,11 @@ jobs:
 
     steps:
     - name: Check out my other private repo
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
          repository: daylight-liontex/WholeSale
          token: ${{ secrets.my_pat }}
+         fetch-depth: 0
          
     - name: download latest PBL
       shell: pwsh
