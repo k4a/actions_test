@@ -33,8 +33,9 @@ jobs:
 #      with:
 #        fetch-depth: 0 # avoid shallow clone so nbgv can do its work.
 
-    - name: DIR
-      run:  dir *.*
+    - name:  DIR
+      shell: pwsh
+      run:   Get-ChildItem -Path *.*
     
 #    - name:  Archive artifacts
 #      shell: pwsh
