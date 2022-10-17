@@ -15,6 +15,7 @@ jobs:
       uses: actions/checkout@v2
       with:
          repository: daylight-liontex/WholeSale
+         token: ${{ secrets.my_pat }}
          
     - name: download latest PBL
       shell: pwsh
