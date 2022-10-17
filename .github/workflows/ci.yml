@@ -25,3 +25,8 @@ jobs:
       
     - name: DIR2
       run:  dir *.*   
+
+    - uses: actions/upload-artifact@v1
+      with:
+         name: Upload artifacts
+         path: artifact.zip
