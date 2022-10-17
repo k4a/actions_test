@@ -20,4 +20,4 @@ jobs:
       run:  dir *.*   
     
     - name: Archive artifacts
-      run:  zip --version
+      run:  Compress-Archive -Path *.txt -DestinationPath artifact.zip
