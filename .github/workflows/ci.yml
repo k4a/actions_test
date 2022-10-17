@@ -16,7 +16,7 @@ jobs:
       env:   
          PBL_URI: ${{ secrets.LETEST_PBL_URI }}
          ACCESS_KEY: ${{ secrets.JFROG_TOKEN }}
-      run:   Invoke-WebRequest -Uri "$env:PBL_URI" -OutFile "pbl.zip" -Headers @{ "Authorization" = "$env:ACCESS_KEY"}
+      run:   Invoke-WebRequest -Uri $env:PBL_URI -OutFile "pbl.zip" -Headers @{ "Authorization" = $env:ACCESS_KEY}
 
 
     - name: Checkout
