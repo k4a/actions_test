@@ -21,9 +21,12 @@ jobs:
     - name: download latest PBL
       shell: pwsh
       env:   
-         PBL_URI: ${{ secrets.LATEST_PBL_URI }}
-         ACCESS_KEY: ${{ secrets.JFROG_TOKEN }}
-      run:   Invoke-WebRequest -Uri $env:PBL_URI -OutFile "pbl.zip" -Headers @{ "Authorization" = $env:ACCESS_KEY}
+         PBL_URI:      ${{ secrets.LATEST_PBL_URI }}
+         POWERGEN_URI: ${{ secrets.POWERGEN_URI }}
+         ACCESS_KEY:   ${{ secrets.JFROG_TOKEN }}
+      run:  |
+         Invoke-WebRequest -Uri $env:PBL_URI -OutFile "pbl.zip" -Headers @{ "Authorization" = $env:ACCESS_KEY}
+         Invoke-WebRequest -Uri $env:POWERGEN_URI -OutFile "powergen.zip" -Headers @{ "Authorization" = $env:ACCESS_KEY}
 
 #    - name: Checkout
 #      uses: actions/checkout@v2
@@ -31,7 +34,7 @@ jobs:
 #        fetch-depth: 0 # avoid shallow clone so nbgv can do its work.
 
     - name: DIR
-      run:  dir *.* -s
+      run:  dir *.*
     
 #    - name:  Archive artifacts
 #      shell: pwsh
