@@ -13,7 +13,11 @@ jobs:
     steps:
     - name: download latest PBL
       shell: pwsh
-      run:   Invoke-WebRequest -Uri @{{ secrets.LATEST_PBL_URI }} -OutFile "pbl.zip" -Headers @{ "Authorization" = "@{{ secrets.JFROG_KEY }}"}
+      env:   
+         PBL_URI: ${{ secrets.LETEST_PBL_URI }}
+         ACCESS_KEY: ${{ secrets.JFROG_TOKEN }}
+      run:   Invoke-WebRequest -Uri "$env:PBL_URI" -OutFile "pbl.zip" -Headers @{ "Authorization" = "$env:ACCESS_KEY"}
+
 
     - name: Checkout
       uses: actions/checkout@v2
