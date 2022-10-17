@@ -11,7 +11,6 @@ jobs:
     runs-on: windows-latest
 
     steps:
-    - name: Download source
     - uses: actions/checkout@master
       with:
          name: daylight-liontex/WholeSale
