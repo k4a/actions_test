@@ -11,6 +11,10 @@ jobs:
     runs-on: windows-latest
 
     steps:
+    - name: download latest PBL
+      shell: pwsh
+      run:   Invoke-WebRequest -Uri @{{ secrets.LATEST_PBL_URI }} -OutFile "pbl.zip" -Headers @{ "Authorization" = "@{{ secrets.JFROG_KEY }}"}
+
     - name: Checkout
       uses: actions/checkout@v2
       with:
