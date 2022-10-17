@@ -35,7 +35,7 @@ jobs:
 
     - name:  DIR
       shell: pwsh
-      run:   Get-ChildItem -Path *.*
+      run:   Get-ChildItem -Path *.* -Recurse
     
 #    - name:  Archive artifacts
 #      shell: pwsh
