@@ -11,13 +11,16 @@ jobs:
     runs-on: windows-latest
 
     steps:
+    - name: Download source
+      shell: pwsh
+      run:   git clone https://github.com/daylight-liontex/WholeSale
+
     - name: download latest PBL
       shell: pwsh
       env:   
          PBL_URI: ${{ secrets.LATEST_PBL_URI }}
          ACCESS_KEY: ${{ secrets.JFROG_TOKEN }}
       run:   Invoke-WebRequest -Uri $env:PBL_URI -OutFile "pbl.zip" -Headers @{ "Authorization" = $env:ACCESS_KEY}
-
 
 #    - name: Checkout
 #      uses: actions/checkout@v2
