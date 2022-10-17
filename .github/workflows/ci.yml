@@ -11,10 +11,11 @@ jobs:
     runs-on: windows-latest
 
     steps:
-    - uses: actions/checkout@master
+    - name: Check out my other private repo
+      uses: actions/checkout@v2
       with:
-         name: daylight-liontex/WholeSale
-
+         repository: daylight-liontex/WholeSale
+         
     - name: download latest PBL
       shell: pwsh
       env:   
