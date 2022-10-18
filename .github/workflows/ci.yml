@@ -5,6 +5,8 @@ on:
   push:
     branches:
       - master
+    paths-ignore:
+      - 'db/**'
 
 jobs:
   build:
@@ -67,11 +69,6 @@ jobs:
          & .build\sync.ps1
       working-directory: ./WholeSale/src
 
-    - uses: actions/upload-artifact@v1
-      with:
-         name: Upload sync.log
-         path: ./WholeSale/src/sync.log
-
     - name: Collect & upload PBL
       shell: pwsh
       env:   
@@ -88,11 +85,6 @@ jobs:
          & .build\build.ps1
       working-directory: ./WholeSale/src
 
-    - uses: actions/upload-artifact@v1
-      with:
-         name: Upload build.log
-         path: ./WholeSale/src/build.log
-
     - name: Collect & Upload EXE
       shell: pwsh
       env:   
@@ -103,15 +95,21 @@ jobs:
          Invoke-RestMethod -Uri $env:EXE_URI -Method Put -InFile "exe.zip" -Headers @{ "Authorization" = $env:ACCESS_KEY}
       working-directory: ./WholeSale/src
 
+    - name: Collect & Upload LOG
+      shell: pwsh
+      if:    success() || failure()
+      env:   
+         LOG_URI:      ${{ secrets.LATEST_LOG_URI }}
+         ACCESS_KEY:   ${{ secrets.JFROG_TOKEN }}
+      run:  |
+         7z a log.zip *.log
+         Invoke-RestMethod -Uri $env:LOG_URI -Method Put -InFile "exe.zip" -Headers @{ "Authorization" = $env:ACCESS_KEY}
+      working-directory: ./WholeSale/src
+
 #    - name: Checkout
 #      uses: actions/checkout@v2
 #      with:
 #        fetch-depth: 0 # avoid shallow clone so nbgv can do its work.
-
-    - name:  DIR
-      shell: pwsh
-      run:   Get-ChildItem -Path *.log -Recurse
-      working-directory: ./WholeSale/src
     
 #    - name:  Archive artifacts
 #      shell: pwsh
