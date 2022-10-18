@@ -11,8 +11,11 @@ on:
 jobs:
   build:
     runs-on: windows-latest
-
+    
     steps:
+    - name: Check out this repo
+      uses: actions/checkout@v3
+
     - name: Check out my other private repo
       uses: actions/checkout@v3
       with:
