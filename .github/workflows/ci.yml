@@ -25,13 +25,13 @@ jobs:
          POWERGEN_URI: ${{ secrets.POWERGEN_URI }}
          ACCESS_KEY:   ${{ secrets.JFROG_TOKEN }}
       run:  |
-         Invoke-WebRequest -Uri $env:PBL_URI -OutFile "pbl.zip" -Headers @{ "Authorization" = $env:ACCESS_KEY}
+#        Invoke-WebRequest -Uri $env:PBL_URI -OutFile "pbl.zip" -Headers @{ "Authorization" = $env:ACCESS_KEY}
          Invoke-WebRequest -Uri $env:POWERGEN_URI -OutFile "powergen.zip" -Headers @{ "Authorization" = $env:ACCESS_KEY}
 
     - name: Extract source & compiler
       shell: pwsh
       run:  |
-         Expand-Archive pbl.zip -DestinationPath ./WholeSale/src
+#        Expand-Archive pbl.zip -DestinationPath ./WholeSale/src
          Expand-Archive powergen.zip -DestinationPath ./WholeSale/src      
 
     - name: Prepare
@@ -39,6 +39,12 @@ jobs:
       run:  |
          New-Item -ItemType Junction -Path ./pic -Target ../pic
          & .build\prepare.ps1
+      working-directory: ./WholeSale/src
+      
+    - name: Import PBL & Build EXE
+      shell: pwsh
+      run:  |
+         & .build\sync.ps1
       working-directory: ./WholeSale/src
 
 #    - name: Checkout
