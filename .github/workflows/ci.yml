@@ -25,13 +25,13 @@ jobs:
          POWERGEN_URI: ${{ secrets.POWERGEN_URI }}
          ACCESS_KEY:   ${{ secrets.JFROG_TOKEN }}
       run:  |
-         #Invoke-WebRequest -Uri $env:PBL_URI -OutFile "pbl.zip" -Headers @{ "Authorization" = $env:ACCESS_KEY}
+         Invoke-WebRequest -Uri $env:PBL_URI -OutFile "pbl.zip" -Headers @{ "Authorization" = $env:ACCESS_KEY}
          Invoke-WebRequest -Uri $env:POWERGEN_URI -OutFile "powergen.zip" -Headers @{ "Authorization" = $env:ACCESS_KEY}
 
     - name: Extract source & compiler
       shell: pwsh
       run:  |
-         #Expand-Archive pbl.zip -DestinationPath ./WholeSale/src
+         Expand-Archive pbl.zip -DestinationPath ./WholeSale/src
          Expand-Archive powergen.zip -DestinationPath ./WholeSale/src
          
     - name: Install VcRedist
@@ -59,11 +59,31 @@ jobs:
          New-Item -ItemType Junction -Path ./pic -Target ../pic
          & .build\prepare.ps1
       working-directory: ./WholeSale/src
-      
+
     - name: Import PBL & Build EXE
       shell: pwsh
       run:  |
          & .build\sync.ps1
+      working-directory: ./WholeSale/src
+
+    - name: Collect & Upload PBL
+      shell: pwsh
+      env:   
+         PBL_URI:      ${{ secrets.LATEST_PBL_URI }}
+         ACCESS_KEY:   ${{ secrets.JFROG_TOKEN }}
+      run:  |
+         .\7z.exe a -r pbl.zip *.pbl
+         Invoke-RestMethod -Uri $env:PBL_URI -Method Put -InFile "pbl.zip" -Headers @{ "Authorization" = $env:ACCESS_KEY}
+      working-directory: ./WholeSale/src
+
+    - name: Collect & Upload EXE
+      shell: pwsh
+      env:   
+         EXE_URI:      ${{ secrets.LATEST_EXE_URI }}
+         ACCESS_KEY:   ${{ secrets.JFROG_TOKEN }}
+      run:  |
+         Get-ChildItem . -Recurse | Resolve-Path -Relative | Where {$_ -match '^.*\\.*\\.*\.(exe|pbd)$'}|Compress-Archive -DestinationPath exe.zip
+         Invoke-RestMethod -Uri $env:EXE_URI -Method Put -InFile "exe.zip" -Headers @{ "Authorization" = $env:ACCESS_KEY}
       working-directory: ./WholeSale/src
 
 #    - name: Checkout
@@ -73,7 +93,7 @@ jobs:
 
     - name:  DIR
       shell: pwsh
-      run:   Get-ChildItem -Path *.* -Recurse
+      run:   Get-ChildItem -Path *.log -Recurse
       working-directory: ./WholeSale/src
     
 #    - name:  Archive artifacts
