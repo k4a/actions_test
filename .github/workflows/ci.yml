@@ -36,7 +36,7 @@ jobs:
          PBL_URI:      ${{ secrets.LATEST_PBL_URI }}
          ACCESS_KEY:   ${{ secrets.JFROG_TOKEN }}
       run:  |
-         Invoke-WebRequest -Uri $env:PBL_URI -OutFile "pbl.zip" -Headers @{ "Authorization" = $env:ACCESS_KEY 
+         Invoke-WebRequest -Uri $env:PBL_URI -OutFile "pbl.zip" -Headers @{ "Authorization" = $env:ACCESS_KEY}
          Expand-Archive pbl.zip -DestinationPath ./WholeSale/src
          
     - name: Install VcRedist
