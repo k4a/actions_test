@@ -23,7 +23,7 @@ jobs:
     - name: Download & extract сompiler
       shell: pwsh
       env:   
-         PBL_URI:      ${{ secrets.LATEST_PBL_URI }}
+         POWERGEN_URI: ${{ secrets.POWERGEN_URI }}
          ACCESS_KEY:   ${{ secrets.JFROG_TOKEN }}
       run:  |
         Invoke-WebRequest -Uri $env:POWERGEN_URI -OutFile "powergen.zip" -Headers @{ "Authorization" = $env:ACCESS_KEY}
