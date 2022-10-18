@@ -32,7 +32,17 @@ jobs:
       shell: pwsh
       run:  |
          #Expand-Archive pbl.zip -DestinationPath ./WholeSale/src
-         Expand-Archive powergen.zip -DestinationPath ./WholeSale/src      
+         Expand-Archive powergen.zip -DestinationPath ./WholeSale/src
+         
+         
+    - name: Install VcRedist
+      shell: pwsh
+      run:  |
+         Install-Module -Name VcRedist -Force
+         New-Item -Path C:\Temp\VcRedist -ItemType Directory
+         $VcList = Get-VcList -Release "2012"
+         Save-VcRedist -VcList $VcList -Path C:\Temp\VcRedist
+         Install-VcRedist -Path C:\Temp\VcRedist -VcList $VcList -Silent
 
     - name: Prepare
       shell: pwsh
