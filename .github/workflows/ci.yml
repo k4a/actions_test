@@ -60,13 +60,19 @@ jobs:
          & .build\prepare.ps1
       working-directory: ./WholeSale/src
 
-    - name: Import PBL & Build EXE
+    - name: Import PBL
       shell: pwsh
       run:  |
          & .build\sync.ps1
       working-directory: ./WholeSale/src
 
-    - name: Collect & Upload PBL
+    - uses: actions/upload-artifact@v1
+      with:
+         name: Upload sync.log
+         path: sync.log
+         working-directory: ./WholeSale/src
+
+    - name: Collect & upload PBL
       shell: pwsh
       env:   
          PBL_URI:      ${{ secrets.LATEST_PBL_URI }}
@@ -75,6 +81,19 @@ jobs:
          7z a -r pbl.zip *.pbl
          Invoke-RestMethod -Uri $env:PBL_URI -Method Put -InFile "pbl.zip" -Headers @{ "Authorization" = $env:ACCESS_KEY}
       working-directory: ./WholeSale/src
+
+    - name: Build EXE
+      shell: pwsh
+      run:  |
+         New-Item -ItemType Junction -Path ./pic -Target ../pic
+         & .build\build.ps1
+      working-directory: ./WholeSale/src
+
+    - uses: actions/upload-artifact@v1
+      with:
+         name: Upload build.log
+         path: build.log
+         working-directory: ./WholeSale/src
 
     - name: Collect & Upload EXE
       shell: pwsh
