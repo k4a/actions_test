@@ -72,7 +72,7 @@ jobs:
          PBL_URI:      ${{ secrets.LATEST_PBL_URI }}
          ACCESS_KEY:   ${{ secrets.JFROG_TOKEN }}
       run:  |
-         .\7z.exe a -r pbl.zip *.pbl
+         7z a -r pbl.zip *.pbl
          Invoke-RestMethod -Uri $env:PBL_URI -Method Put -InFile "pbl.zip" -Headers @{ "Authorization" = $env:ACCESS_KEY}
       working-directory: ./WholeSale/src
 
