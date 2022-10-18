@@ -106,7 +106,7 @@ jobs:
       run:  |
          7z a log.zip *.log
          $ARTIFACT_SHA1_CHECKSUM=$(Get-FileHash -Algorithm SHA1 log.zip).Hash
-         Invoke-RestMethod -Uri $env:LOG_URI -Method Put -InFile "exe.zip" -Headers @{ "Authorization" = $env:ACCESS_KEY;"X-Checksum-SHA1"=$ARTIFACT_SHA1_CHECKSUM;}
+         Invoke-RestMethod -Uri $env:LOG_URI -Method Put -InFile "log.zip" -Headers @{ "Authorization" = $env:ACCESS_KEY;"X-Checksum-SHA1"=$ARTIFACT_SHA1_CHECKSUM;}
       working-directory: ./WholeSale/src
 
 #    - name: Checkout
