@@ -32,7 +32,14 @@ jobs:
       shell: pwsh
       run:  |
          Expand-Archive pbl.zip -DestinationPath ./WholeSale/src
-         Expand-Archive powergen.zip -DestinationPath ./WholeSale/src         
+         Expand-Archive powergen.zip -DestinationPath ./WholeSale/src      
+
+    - name: Prepare
+      shell: pwsh
+      run:  |
+         New-Item -ItemType Junction -Path ./pic -Target ../pic
+         & .build\prepare.ps1
+      working-directory: ./WholeSale/src
 
 #    - name: Checkout
 #      uses: actions/checkout@v2
