@@ -85,7 +85,6 @@ jobs:
     - name: Build EXE
       shell: pwsh
       run:  |
-         New-Item -ItemType Junction -Path ./pic -Target ../pic
          & .build\build.ps1
       working-directory: ./WholeSale/src
 
