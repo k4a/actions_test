@@ -76,7 +76,8 @@ jobs:
          ACCESS_KEY:   ${{ secrets.JFROG_TOKEN }}
       run:  |
          7z a -r pbl.zip *.pbl
-         Invoke-RestMethod -Uri $env:PBL_URI -Method Put -InFile "pbl.zip" -Headers @{ "Authorization" = $env:ACCESS_KEY}
+         $ARTIFACT_SHA1_CHECKSUM=$(Get-FileHash -Algorithm SHA1 pbl.zip).Hash
+         Invoke-RestMethod -Uri $env:PBL_URI -Method Put -InFile "pbl.zip" -Headers @{ "Authorization" = $env:ACCESS_KEY;"X-Checksum-SHA1"=$ARTIFACT_SHA1_CHECKSUM;}
       working-directory: ./WholeSale/src
 
     - name: Build EXE
@@ -92,7 +93,8 @@ jobs:
          ACCESS_KEY:   ${{ secrets.JFROG_TOKEN }}
       run:  |
          Get-ChildItem . -Recurse | Resolve-Path -Relative | Where {$_ -match '^.*\\.*\\.*\.(exe|pbd)$'}|Compress-Archive -DestinationPath exe.zip
-         Invoke-RestMethod -Uri $env:EXE_URI -Method Put -InFile "exe.zip" -Headers @{ "Authorization" = $env:ACCESS_KEY}
+         $ARTIFACT_SHA1_CHECKSUM=$(Get-FileHash -Algorithm SHA1 exe.zip).Hash
+         Invoke-RestMethod -Uri $env:EXE_URI -Method Put -InFile "exe.zip" -Headers @{ "Authorization" = $env:ACCESS_KEY;"X-Checksum-SHA1"=$ARTIFACT_SHA1_CHECKSUM;}
       working-directory: ./WholeSale/src
 
     - name: Collect & Upload LOG
@@ -103,7 +105,8 @@ jobs:
          ACCESS_KEY:   ${{ secrets.JFROG_TOKEN }}
       run:  |
          7z a log.zip *.log
-         Invoke-RestMethod -Uri $env:LOG_URI -Method Put -InFile "exe.zip" -Headers @{ "Authorization" = $env:ACCESS_KEY}
+         $ARTIFACT_SHA1_CHECKSUM=$(Get-FileHash -Algorithm SHA1 log.zip).Hash
+         Invoke-RestMethod -Uri $env:LOG_URI -Method Put -InFile "exe.zip" -Headers @{ "Authorization" = $env:ACCESS_KEY;"X-Checksum-SHA1"=$ARTIFACT_SHA1_CHECKSUM;}
       working-directory: ./WholeSale/src
 
 #    - name: Checkout
