@@ -20,22 +20,24 @@ jobs:
          token:      ${{ secrets.my_pat }}
          path:       WholeSale
          
-    - name: download latest PBL
+    - name: Download & extract сompiler
       shell: pwsh
       env:   
          PBL_URI:      ${{ secrets.LATEST_PBL_URI }}
-         POWERGEN_URI: ${{ secrets.POWERGEN_URI }}
          ACCESS_KEY:   ${{ secrets.JFROG_TOKEN }}
       run:  |
-         Invoke-WebRequest -Uri $env:PBL_URI -OutFile "pbl.zip" -Headers @{ "Authorization" = $env:ACCESS_KEY}
-         Invoke-WebRequest -Uri $env:POWERGEN_URI -OutFile "powergen.zip" -Headers @{ "Authorization" = $env:ACCESS_KEY}
+        Invoke-WebRequest -Uri $env:POWERGEN_URI -OutFile "powergen.zip" -Headers @{ "Authorization" = $env:ACCESS_KEY}
+        Expand-Archive powergen.zip -DestinationPath ./WholeSale/src
 
-    - name: Extract source & compiler
+    - name: download & extract latest PBL
       shell: pwsh
       continue-on-error: true
+      env:    
+         PBL_URI:      ${{ secrets.LATEST_PBL_URI }}
+         ACCESS_KEY:   ${{ secrets.JFROG_TOKEN }}
       run:  |
+         Invoke-WebRequest -Uri $env:PBL_URI -OutFile "pbl.zip" -Headers @{ "Authorization" = $env:ACCESS_KEY 
          Expand-Archive pbl.zip -DestinationPath ./WholeSale/src
-         Expand-Archive powergen.zip -DestinationPath ./WholeSale/src
          
     - name: Install VcRedist
       shell: pwsh
