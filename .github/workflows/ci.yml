@@ -28,6 +28,12 @@ jobs:
          Invoke-WebRequest -Uri $env:PBL_URI -OutFile "pbl.zip" -Headers @{ "Authorization" = $env:ACCESS_KEY}
          Invoke-WebRequest -Uri $env:POWERGEN_URI -OutFile "powergen.zip" -Headers @{ "Authorization" = $env:ACCESS_KEY}
 
+    - name: Extract source & compiler
+      shell: pwsh
+      run:  |
+         Expand-Archive pbl.zip -DestinationPath ./WholeSale/src
+         Expand-Archive powergen.zip -DestinationPath ./WholeSale/src         
+
 #    - name: Checkout
 #      uses: actions/checkout@v2
 #      with:
@@ -36,6 +42,7 @@ jobs:
     - name:  DIR
       shell: pwsh
       run:   Get-ChildItem -Path *.* -Recurse
+      working-directory: ./WholeSale/src
     
 #    - name:  Archive artifacts
 #      shell: pwsh
