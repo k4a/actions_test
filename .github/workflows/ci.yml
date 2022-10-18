@@ -34,15 +34,24 @@ jobs:
          #Expand-Archive pbl.zip -DestinationPath ./WholeSale/src
          Expand-Archive powergen.zip -DestinationPath ./WholeSale/src
          
-         
     - name: Install VcRedist
       shell: pwsh
       run:  |
-         Install-Module -Name VcRedist -Force
-         New-Item -Path C:\Temp\VcRedist -ItemType Directory
-         $VcList = Get-VcList -Release "2005"
-         Save-VcRedist -VcList $VcList -Path C:\Temp\VcRedist
-         Install-VcRedist -Path C:\Temp\VcRedist -VcList $VcList -Silent
+            #Make and download to folder#
+            New-Item -Path c:\VCRuntime -ItemType directory
+            Write "Download Microsoft Visual C++ 2005"
+            Write "Microsoft Visual C++ 2005 SP1 Redistributable Package (x86)" -Verbose
+            Invoke-WebRequest   "http://download.microsoft.com/download/8/B/4/8B42259F-5D70-43F4-AC2E-4B208FD8D66A/vcredist_x86.EXE" -OutFile "C:\VCRuntime\vcredist_x86_2005.exe"
+            #Install the files from the directory#
+            $files = Get-ChildItem -Path "C:\VCRuntime\" -Filter *.exe
+            foreach($item in $files)
+            {
+            Write-Output "Installing: $item"
+            Start-Process -FilePath $item.FullName -ArgumentList '/q' -Wait
+            Write-Output "Installation of $item has been completed."
+            }
+            Remove-Item -path "C:\VCRuntime" -recurse
+            Write-Output "All packages have been installed and cleanup performed."
 
     - name: Prepare
       shell: pwsh
